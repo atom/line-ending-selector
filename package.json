@@ -1,0 +1,22 @@
+{
+  "name": "line-ending-selector",
+  "version": "0.0.0",
+  "main": "./lib/main",
+  "description": "Select the line ending to use for the current editor.",
+  "license": "MIT",
+  "repository": "https://github.com/atom/line-ending-selector",
+  "engines": {
+    "atom": "^1.0.0"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
+  "devDependencies": {
+    "babel-eslint": "^3.1.23",
+    "eslint": "^0.24.1"
+  }
+}
