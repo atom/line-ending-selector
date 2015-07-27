@@ -1,7 +1,7 @@
-'use babel'
+'use babel';
 
 describe("line ending selector", () => {
-  let editor, lineEndingTile;
+  let lineEndingTile;
 
   beforeEach(() => {
     waitsForPromise(() => {
