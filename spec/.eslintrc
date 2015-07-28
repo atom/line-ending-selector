@@ -3,6 +3,7 @@
     "jasmine": true
   },
   "globals": {
-    "waitsForPromise": true
+    "waitsForPromise": true,
+    "advanceClock": true
   }
 }
