@@ -18,7 +18,7 @@ describe("line ending selector", () => {
       let statusBar = atom.workspace.getBottomPanels()[0].getItem();
       lineEndingModal = atom.workspace.getModalPanels()[0];
       lineEndingSelector = lineEndingModal.getItem();
-      jasmine.attachToDOM(lineEndingSelector[0]);
+      jasmine.attachToDOM(atom.views.getView(lineEndingModal));
 
       lineEndingTile = statusBar.getRightTiles()[0].getItem();
       expect(lineEndingTile.className).toBe("line-ending-tile");
