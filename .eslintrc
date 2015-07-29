@@ -11,7 +11,6 @@
   "rules": {
     "strict": 0,
 
-    "brace-style": [2, "stroustrup", {"allowSingleLine": true}],
     "curly": 0,
     "consistent-this": [2, "self"],
     "dot-notation": [2, {"allowPattern": "^__\\w+$"}],
