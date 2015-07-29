@@ -1,3 +1,3 @@
 Hello
 Goodbye
-Cool
+Mixed

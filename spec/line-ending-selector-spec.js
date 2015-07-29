@@ -1,5 +1,7 @@
 'use babel';
 
+import helpers from '../lib/helpers';
+
 describe("line ending selector", () => {
   let lineEndingTile, lineEndingModal, lineEndingSelector;
 
@@ -28,9 +30,12 @@ describe("line ending selector", () => {
 
   describe("when empty file is opened", () => {
     it("determines line ending from system platform", () => {
+      spyOn(helpers, 'getProcessPlatform').andReturn('win32');
+
       waitsForPromise(() => {
-        return atom.workspace.open("").then(() => {
-          expect(lineEndingTile.textContent).toBe("LF");
+        return atom.workspace.open("").then((editor) => {
+          expect(lineEndingTile.textContent).toBe("CRLF");
+          expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n');
         });
       });
     });
@@ -59,8 +64,9 @@ describe("line ending selector", () => {
   describe("when a file is opened that contains all Unix line endings", () => {
     it("displays 'LF' line endings", () => {
       waitsForPromise(() => {
-        return atom.workspace.open('unix-endings.md').then(() => {
+        return atom.workspace.open('unix-endings.md').then((editor) => {
           expect(lineEndingTile.textContent).toBe("LF");
+          expect(editor.getBuffer().getPreferredLineEnding()).toBe(null);
         });
       });
     });
@@ -91,12 +97,27 @@ describe("line ending selector", () => {
       atom.commands.dispatch(lineEndingSelector[0], 'core:confirm');
       expect(lineEndingModal.isVisible()).toBe(false);
       expect(lineEndingTile.textContent).toBe('CRLF');
+
+      let editor = atom.workspace.getActiveTextEditor();
+      expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n');
+      expect(editor.getBuffer().getPreferredLineEnding()).toBe("\r\n");
     });
 
     describe("when modal is exited", () => {
       it("leaves the tile selection as-is", () => {
         atom.commands.dispatch(lineEndingSelector[0], 'core:cancel');
         expect(lineEndingTile.textContent).toBe('LF');
+      });
+    });
+  });
+
+  describe("clicking out of a text editor", () => {
+    it("displays no line ending in the status bar", () => {
+      waitsForPromise(() => {
+        return atom.workspace.open('unix-endings.md').then(() => {
+          atom.workspace.getActivePane().destroy();
+          expect(lineEndingTile.textContent).toBe("");
+        });
       });
     });
   });
