@@ -28,95 +28,124 @@ describe("line ending selector", () => {
     });
   });
 
-  describe("when empty file is opened", () => {
-    it("determines line ending from system platform", () => {
-      spyOn(helpers, 'getProcessPlatform').andReturn('win32');
+  describe("Commands", () => {
+    let editor, editorElement;
 
-      waitsForPromise(() => {
-        return atom.workspace.open("").then((editor) => {
-          expect(lineEndingTile.textContent).toBe("CRLF");
-          expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n');
-        });
-      });
-    });
-  });
-
-  describe("when a file is opened that contains all Windows line endings", () => {
-    it("displays 'CRLF' line endings", () => {
-      waitsForPromise(() => {
-        return atom.workspace.open('windows-endings.md').then(() => {
-          expect(lineEndingTile.textContent).toBe("CRLF");
-        });
-      });
-    });
-  });
-
-  describe("when a file is opened that contains mixed line endings", () => {
-    it("displays 'Mixed' line endings", () => {
-      waitsForPromise(() => {
-        return atom.workspace.open('mixed-endings.md').then(() => {
-          expect(lineEndingTile.textContent).toBe("Mixed");
-        });
-      });
-    });
-  });
-
-  describe("when a file is opened that contains all Unix line endings", () => {
-    it("displays 'LF' line endings", () => {
-      waitsForPromise(() => {
-        return atom.workspace.open('unix-endings.md').then((editor) => {
-          expect(lineEndingTile.textContent).toBe("LF");
-          expect(editor.getBuffer().getPreferredLineEnding()).toBe(null);
-        });
-      });
-    });
-  });
-
-  describe("clicking the tile", () => {
     beforeEach(() => {
       waitsForPromise(() => {
-        return atom.workspace.open('unix-endings.md');
-      });
-
-      runs(() => {
-        lineEndingTile.dispatchEvent(new MouseEvent('click', {}));
+        return atom.workspace.open('mixed-endings.md').then((e) => {
+          editor = e;
+          editorElement = atom.views.getView(editor);
+        });
       });
     });
 
-    it("opens the line ending selector modal", () => {
-      expect(lineEndingModal.isVisible()).toBe(true);
-      expect(lineEndingSelector).toHaveFocus();
-      let listItems = lineEndingSelector.list.find('li');
-      expect(listItems[0].textContent).toBe('LF');
-      expect(listItems[1].textContent).toBe('CRLF');
-
-      lineEndingSelector.filterEditorView.getModel().setText('CR');
-
-      advanceClock(100);
-
-      atom.commands.dispatch(lineEndingSelector[0], 'core:confirm');
-      expect(lineEndingModal.isVisible()).toBe(false);
-      expect(lineEndingTile.textContent).toBe('CRLF');
-
-      let editor = atom.workspace.getActiveTextEditor();
-      expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n');
-      expect(editor.getBuffer().getPreferredLineEnding()).toBe("\r\n");
+    describe("When 'line-ending-selector:convert-to-LF' is run", () => {
+      it("converts the file to LF line endings", () => {
+        atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-LF');
+        expect(editor.getText()).toBe('Hello\nGoodbye\nMixed\n');
+      });
     });
 
-    describe("when modal is exited", () => {
-      it("leaves the tile selection as-is", () => {
-        atom.commands.dispatch(lineEndingSelector[0], 'core:cancel');
-        expect(lineEndingTile.textContent).toBe('LF');
+    describe("When 'line-ending-selector:convert-to-LF' is run", () => {
+      it("converts the file to CRLF line endings", () => {
+        atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-CRLF');
+        expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nMixed\r\n');
       });
     });
   });
 
-  describe("clicking out of a text editor", () => {
-    it("displays no line ending in the status bar", () => {
-      waitsForPromise(() => {
-        return atom.workspace.open('unix-endings.md').then(() => {
-          atom.workspace.getActivePane().destroy();
-          expect(lineEndingTile.textContent).toBe("");
+  describe("Status bar tile", () => {
+    describe("when empty file is opened", () => {
+      it("determines line ending from system platform", () => {
+        spyOn(helpers, 'getProcessPlatform').andReturn('win32');
+
+        waitsForPromise(() => {
+          return atom.workspace.open("").then((editor) => {
+            expect(lineEndingTile.textContent).toBe("CRLF");
+            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n');
+          });
+        });
+      });
+    });
+
+    describe("when a file is opened that contains all Windows line endings", () => {
+      it("displays 'CRLF' line endings", () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('windows-endings.md').then(() => {
+            expect(lineEndingTile.textContent).toBe("CRLF");
+          });
+        });
+      });
+    });
+
+    describe("when a file is opened that contains mixed line endings", () => {
+      it("displays 'Mixed' line endings", () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('mixed-endings.md').then(() => {
+            expect(lineEndingTile.textContent).toBe("Mixed");
+          });
+        });
+      });
+    });
+
+    describe("when a file is opened that contains all Unix line endings", () => {
+      it("displays 'LF' line endings", () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('unix-endings.md').then((editor) => {
+            expect(lineEndingTile.textContent).toBe("LF");
+            expect(editor.getBuffer().getPreferredLineEnding()).toBe(null);
+          });
+        });
+      });
+    });
+
+    describe("clicking the tile", () => {
+      beforeEach(() => {
+        waitsForPromise(() => {
+          return atom.workspace.open('unix-endings.md');
+        });
+
+        runs(() => {
+          lineEndingTile.dispatchEvent(new MouseEvent('click', {}));
+        });
+      });
+
+      it("opens the line ending selector modal", () => {
+        expect(lineEndingModal.isVisible()).toBe(true);
+        expect(lineEndingSelector).toHaveFocus();
+        let listItems = lineEndingSelector.list.find('li');
+        expect(listItems[0].textContent).toBe('LF');
+        expect(listItems[1].textContent).toBe('CRLF');
+
+        lineEndingSelector.filterEditorView.getModel().setText('CR');
+
+        advanceClock(100);
+
+        atom.commands.dispatch(lineEndingSelector[0], 'core:confirm');
+        expect(lineEndingModal.isVisible()).toBe(false);
+        expect(lineEndingTile.textContent).toBe('CRLF');
+
+        let editor = atom.workspace.getActiveTextEditor();
+        expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n');
+        expect(editor.getBuffer().getPreferredLineEnding()).toBe("\r\n");
+      });
+
+      describe("when modal is exited", () => {
+        it("leaves the tile selection as-is", () => {
+          atom.commands.dispatch(lineEndingSelector[0], 'core:cancel');
+          expect(lineEndingTile.textContent).toBe('LF');
+        });
+      });
+    });
+
+    describe("clicking out of a text editor", () => {
+      it("displays no line ending in the status bar", () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('unix-endings.md').then(() => {
+            atom.workspace.getActivePane().destroy();
+            expect(lineEndingTile.textContent).toBe("");
+          });
         });
       });
     });
