@@ -149,5 +149,58 @@ describe("line ending selector", () => {
         });
       });
     });
+
+    describe("when the buffer's line endings change", () => {
+      let editor, editorElement;
+
+      beforeEach(() => {
+        waitsForPromise(() => {
+          return atom.workspace.open('unix-endings.md').then((e) => {
+            editor = e;
+            editorElement = atom.views.getView(editor);
+          });
+        });
+      });
+
+      it("updates the line ending text in the tile", () => {
+        let buffer = editor.getBuffer();
+        spyOn(buffer, 'scan').andCallThrough();
+        jasmine.useRealClock();
+
+        expect(lineEndingTile.textContent).toBe("LF");
+
+        editor.setTextInBufferRange([[0, 0], [0, 0]], "... ");
+        editor.setTextInBufferRange([[0, Infinity], [1, 0]], "\r\n", {normalizeLineEndings: false});
+
+        waits(1);
+
+        runs(() => {
+          expect(buffer.scan.callCount).toBe(1);
+          expect(lineEndingTile.textContent).toBe("Mixed");
+        });
+
+        runs(() => {
+          atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-CRLF');
+        });
+
+        waits(1);
+
+        runs(() => {
+          expect(buffer.scan.callCount).toBe(2);
+          expect(lineEndingTile.textContent).toBe("CRLF");
+        });
+
+        runs(() => {
+          atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-LF');
+        });
+
+        waits(1);
+
+        runs(() => {
+          expect(buffer.scan.callCount).toBe(3);
+          expect(lineEndingTile.textContent).toBe("LF");
+        });
+      });
+    });
   });
 });
