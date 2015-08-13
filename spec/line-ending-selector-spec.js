@@ -169,8 +169,10 @@ describe("line ending selector", () => {
 
         expect(lineEndingTile.textContent).toBe("LF");
 
-        editor.setTextInBufferRange([[0, 0], [0, 0]], "... ");
-        editor.setTextInBufferRange([[0, Infinity], [1, 0]], "\r\n", {normalizeLineEndings: false});
+        runs(() => {
+          editor.setTextInBufferRange([[0, 0], [0, 0]], "... ");
+          editor.setTextInBufferRange([[0, Infinity], [1, 0]], "\r\n", {normalizeLineEndings: false});
+        });
 
         waits(1);
 
@@ -199,6 +201,16 @@ describe("line ending selector", () => {
         runs(() => {
           expect(buffer.scan.callCount).toBe(3);
           expect(lineEndingTile.textContent).toBe("LF");
+        });
+
+        runs(() => {
+          editor.setTextInBufferRange([[0, 0], [0, 0]], "\n");
+        });
+
+        waits(1);
+
+        runs(() => {
+          expect(buffer.scan.callCount).toBe(3);
         });
       });
     });
