@@ -164,8 +164,20 @@ describe("line ending selector", () => {
 
       it("updates the line ending text in the tile", () => {
         let buffer = editor.getBuffer();
-        spyOn(buffer, 'scan').andCallThrough();
         jasmine.useRealClock();
+
+        let tileText = lineEndingTile.textContent;
+        let tileUpdateCount = 0
+        Object.defineProperty(lineEndingTile, 'textContent', {
+          get() {
+            return tileText;
+          },
+
+          set(text) {
+            tileUpdateCount++;
+            tileText = text;
+          }
+        })
 
         expect(lineEndingTile.textContent).toBe("LF");
 
@@ -177,7 +189,7 @@ describe("line ending selector", () => {
         waits(1);
 
         runs(() => {
-          expect(buffer.scan.callCount).toBe(1);
+          expect(tileUpdateCount).toBe(1);
           expect(lineEndingTile.textContent).toBe("Mixed");
         });
 
@@ -188,7 +200,7 @@ describe("line ending selector", () => {
         waits(1);
 
         runs(() => {
-          expect(buffer.scan.callCount).toBe(2);
+          expect(tileUpdateCount).toBe(2);
           expect(lineEndingTile.textContent).toBe("CRLF");
         });
 
@@ -199,7 +211,7 @@ describe("line ending selector", () => {
         waits(1);
 
         runs(() => {
-          expect(buffer.scan.callCount).toBe(3);
+          expect(tileUpdateCount).toBe(3);
           expect(lineEndingTile.textContent).toBe("LF");
         });
 
@@ -210,7 +222,7 @@ describe("line ending selector", () => {
         waits(1);
 
         runs(() => {
-          expect(buffer.scan.callCount).toBe(3);
+          expect(tileUpdateCount).toBe(3);
         });
       });
     });
