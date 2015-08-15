@@ -3,7 +3,7 @@
 ![status bar tile](https://cloud.githubusercontent.com/assets/1305617/9274149/6b317568-4293-11e5-83ba-614a6c0d9890.png)
 
 
-This is an [Atom](https://atom.io) package that displays the current line ending type of a file: `CRLF` (Windows), `LF` (Unix), or `Mixed` (both). It also lets the user change the line ending of a file.
+This is an [Atom](https://atom.io) package that displays the current line ending type of a file: `CRLF` (Windows), `LF` (Unix), or `Mixed` (both). It also lets you change the line ending of a file.
 
 ## Install
 
