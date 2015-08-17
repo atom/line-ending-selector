@@ -1,9 +1,0 @@
-{
-  "env": {
-    "jasmine": true
-  },
-  "globals": {
-    "waitsForPromise": true,
-    "advanceClock": true
-  }
-}
