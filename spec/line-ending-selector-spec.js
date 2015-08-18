@@ -124,8 +124,10 @@ describe('line ending selector', () => {
 
         atom.commands.dispatch(lineEndingSelector[0], 'core:confirm')
         expect(lineEndingModal.isVisible()).toBe(false)
-        expect(lineEndingTile.textContent).toBe('CRLF')
 
+        advanceClock(1)
+
+        expect(lineEndingTile.textContent).toBe('CRLF')
         let editor = atom.workspace.getActiveTextEditor()
         expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n')
         expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
