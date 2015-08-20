@@ -5,10 +5,6 @@
 
 This is an [Atom](https://atom.io) package that displays the current line ending type of a file: `CRLF` (Windows), `LF` (Unix), or `Mixed` (both). It also lets you change the line ending of a file.
 
-## Install
-
-Search for this package, "line-ending-selector", in the Install tab of Atom's Setting View. You can get to the Settings View by pressing <kbd>cmd + ,</kbd>. Select this package and click "Install".
-
 ## To Use
 
 When the package is activated it will show the current line ending of the file in the right side of the status-bar. If a new file is created the line ending will start with the system default: `CRLF` for Windows and `LF` for Mac and Linux. If a file contains both it will display `Mixed`.
