@@ -23,7 +23,7 @@ describe('line ending selector', () => {
       jasmine.attachToDOM(atom.views.getView(lineEndingModal))
 
       lineEndingTile = statusBar.getRightTiles()[0].getItem()
-      expect(lineEndingTile.className).toBe('line-ending-tile')
+      expect(lineEndingTile.className).toMatch(/line-ending-tile/)
       expect(lineEndingTile.textContent).toBe('')
     })
   })
