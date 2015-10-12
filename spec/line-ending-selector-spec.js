@@ -100,6 +100,17 @@ describe('line ending selector', () => {
       })
     })
 
+    describe('when a file is opened that contains all old style line endings', () => {
+      it('displays "CR" line endings', () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('old-endings.md').then((editor) => {
+            expect(lineEndingTile.textContent).toBe('CR')
+            expect(editor.getBuffer().getPreferredLineEnding()).toBe(null)
+          })
+        })
+      })
+    })
+
     describe('clicking the tile', () => {
       beforeEach(() => {
         waitsForPromise(() => {
