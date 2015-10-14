@@ -55,102 +55,63 @@ describe('line ending selector', () => {
     })
   })
 
-  describe('Settings: \'Default line ending for new files\'', () => {
-    describe('when empty file is opened with \'OS Default\' setting', () => {
-      beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'OS Default'))
-
-      it('determines new file line ending on Windows platform', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('win32')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('CRLF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
-          })
-        })
-      })
-
-      it('determines new file line ending on *nix platforms', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('*nix')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('LF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
-          })
-        })
-      })
-    })
-
-    describe('when empty file is opened with \'CRLF\' setting', () => {
-      beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'CRLF'))
-
-      it('determines new file line ending on Windows platform', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('win32')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('CRLF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
-          })
-        })
-      })
-
-      it('determines new file line ending on *nix platforms', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('*nix')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('CRLF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
-          })
-        })
-      })
-    })
-
-    describe('when empty file is opened with \'LF\' setting', () => {
-      beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'LF'))
-
-      it('determines new file line ending on Windows platform', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('win32')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('LF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
-          })
-        })
-      })
-
-      it('determines new file line ending on *nix platforms', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('*nix')
-
-        waitsForPromise(() => {
-          return atom.workspace.open('').then((editor) => {
-            expect(lineEndingTile.textContent).toBe('LF')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
-          })
-        })
-      })
-    })
-  })
-
   describe('Status bar tile', () => {
-    describe('when empty file is opened', () => {
-      it('determines line ending from system platform', () => {
-        spyOn(helpers, 'getProcessPlatform').andReturn('win32')
-
+    describe('when an empty file is opened', () => {
+      it('uses the default line endings for the platform', () => {
         waitsForPromise(() => {
+          spyOn(helpers, 'getProcessPlatform').andReturn('win32')
+
           return atom.workspace.open('').then((editor) => {
             expect(lineEndingTile.textContent).toBe('CRLF')
             expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
           })
         })
+
+        waitsForPromise(() => {
+          helpers.getProcessPlatform.andReturn('darwin')
+
+          return atom.workspace.open('').then((editor) => {
+            expect(lineEndingTile.textContent).toBe('LF')
+            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
+          })
+        })
+      })
+
+      describe('when the "defaultLineEnding" setting is set to "LF"', () => {
+        beforeEach(() => {
+          atom.config.set('line-ending-selector.defaultLineEnding', 'LF')
+        })
+
+        it('uses LF line endings, regardless of the platform', () => {
+          waitsForPromise(() => {
+            spyOn(helpers, 'getProcessPlatform').andReturn('win32')
+
+            return atom.workspace.open('').then((editor) => {
+              expect(lineEndingTile.textContent).toBe('LF')
+              expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
+            })
+          })
+        })
+      })
+
+      describe('when the "defaultLineEnding" setting is set to "CRLF"', () => {
+        beforeEach(() => {
+          atom.config.set('line-ending-selector.defaultLineEnding', 'CRLF')
+        })
+
+        it('uses CRLF line endings, regardless of the platform', () => {
+          waitsForPromise(() => {
+            return atom.workspace.open('').then((editor) => {
+              expect(lineEndingTile.textContent).toBe('CRLF')
+              expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
+            })
+          })
+        })
       })
     })
 
-    describe('when a file is opened that contains all Windows line endings', () => {
-      it('displays "CRLF" line endings', () => {
+    describe('when a file is opened that contains only CRLF line endings', () => {
+      it('displays "CRLF" as the line ending', () => {
         waitsForPromise(() => {
           return atom.workspace.open('windows-endings.md').then(() => {
             expect(lineEndingTile.textContent).toBe('CRLF')
@@ -159,18 +120,8 @@ describe('line ending selector', () => {
       })
     })
 
-    describe('when a file is opened that contains mixed line endings', () => {
-      it('displays "Mixed" line endings', () => {
-        waitsForPromise(() => {
-          return atom.workspace.open('mixed-endings.md').then(() => {
-            expect(lineEndingTile.textContent).toBe('Mixed')
-          })
-        })
-      })
-    })
-
-    describe('when a file is opened that contains all Unix line endings', () => {
-      it('displays "LF" line endings', () => {
+    describe('when a file is opened that contains only LF line endings', () => {
+      it('displays "LF" as the line ending', () => {
         waitsForPromise(() => {
           return atom.workspace.open('unix-endings.md').then((editor) => {
             expect(lineEndingTile.textContent).toBe('LF')
@@ -180,12 +131,22 @@ describe('line ending selector', () => {
       })
     })
 
-    describe('when a file is opened that contains all old style line endings', () => {
-      it('displays "CR" line endings', () => {
+    describe('when a file is opened that contains only legacy CR line endings', () => {
+      it('displays "CR" as the line ending', () => {
         waitsForPromise(() => {
           return atom.workspace.open('old-endings.md').then((editor) => {
             expect(lineEndingTile.textContent).toBe('CR')
             expect(editor.getBuffer().getPreferredLineEnding()).toBe(null)
+          })
+        })
+      })
+    })
+
+    describe('when a file is opened that contains mixed line endings', () => {
+      it('displays "Mixed" as the line ending', () => {
+        waitsForPromise(() => {
+          return atom.workspace.open('mixed-endings.md').then(() => {
+            expect(lineEndingTile.textContent).toBe('Mixed')
           })
         })
       })
