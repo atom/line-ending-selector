@@ -56,10 +56,7 @@ describe('line ending selector', () => {
   })
 
   describe('Settings: \'Default line ending for new files\'', () => {
-
-
     describe('when empty file is opened with \'OS Default\' setting', () => {
-
       beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'OS Default'))
 
       it('determines new file line ending on Windows platform', () => {
@@ -86,7 +83,6 @@ describe('line ending selector', () => {
     })
 
     describe('when empty file is opened with \'CRLF\' setting', () => {
-
       beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'CRLF'))
 
       it('determines new file line ending on Windows platform', () => {
@@ -113,7 +109,6 @@ describe('line ending selector', () => {
     })
 
     describe('when empty file is opened with \'LF\' setting', () => {
-
       beforeEach(() => atom.config.set('line-ending-selector.defaultLineEnding', 'LF'))
 
       it('determines new file line ending on Windows platform', () => {
@@ -138,9 +133,7 @@ describe('line ending selector', () => {
         })
       })
     })
-
   })
-
 
   describe('Status bar tile', () => {
     describe('when empty file is opened', () => {
