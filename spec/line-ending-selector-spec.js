@@ -3,7 +3,7 @@
 import helpers from '../lib/helpers'
 
 describe('line ending selector', () => {
-  let lineEndingTile, lineEndingModal, lineEndingSelector
+  let lineEndingTile
 
   beforeEach(() => {
     waitsForPromise(() => {
@@ -18,9 +18,6 @@ describe('line ending selector', () => {
 
     runs(() => {
       let statusBar = atom.workspace.getBottomPanels()[0].getItem()
-      lineEndingModal = atom.workspace.getModalPanels()[0]
-      lineEndingSelector = lineEndingModal.getItem()
-      jasmine.attachToDOM(atom.views.getView(lineEndingModal))
 
       lineEndingTile = statusBar.getRightTiles()[0].getItem()
       expect(lineEndingTile.className).toMatch(/line-ending-tile/)
@@ -153,13 +150,19 @@ describe('line ending selector', () => {
     })
 
     describe('clicking the tile', () => {
+      let lineEndingModal, lineEndingSelector
+
       beforeEach(() => {
+        jasmine.attachToDOM(atom.views.getView(atom.workspace))
+
         waitsForPromise(() => {
           return atom.workspace.open('unix-endings.md')
         })
 
         runs(() => {
           lineEndingTile.dispatchEvent(new MouseEvent('click', {}))
+          lineEndingModal = atom.workspace.getModalPanels()[0]
+          lineEndingSelector = lineEndingModal.getItem()
         })
       })
 
