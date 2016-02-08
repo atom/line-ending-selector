@@ -22,6 +22,19 @@
   "devDependencies": {
     "standard": "^5.1.0"
   },
+  "configSchema": {
+    "defaultLineEnding": {
+      "title": "Default line ending",
+      "description": "Line ending to use for new files",
+      "type": "string",
+      "default": "OS Default",
+      "enum": [
+        "OS Default",
+        "LF",
+        "CRLF"
+      ]
+    }
+  },
   "standard": {
     "globals": [
       "advanceClock",
