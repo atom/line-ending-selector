@@ -2,6 +2,12 @@
 
 import helpers from '../lib/helpers'
 
+function findStatusBar () {
+  const footerPanels = atom.workspace.getFooterPanels()
+  if (footerPanels.length > 0) return footerPanels[0].getItem()
+  return atom.workspace.getBottomPanels()[0].getItem()
+}
+
 describe('line ending selector', () => {
   let lineEndingTile
 
@@ -17,7 +23,7 @@ describe('line ending selector', () => {
     waits(1)
 
     runs(() => {
-      let statusBar = atom.workspace.getBottomPanels()[0].getItem()
+      let statusBar = findStatusBar()
 
       lineEndingTile = statusBar.getRightTiles()[0].getItem()
       expect(lineEndingTile.className).toMatch(/line-ending-tile/)
