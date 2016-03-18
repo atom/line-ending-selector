@@ -2,9 +2,13 @@
 
 import helpers from '../lib/helpers'
 
+// This exists only so that CI passes on both Atom 1.6 and Atom 1.8+.
 function findStatusBar () {
   if (typeof atom.workspace.getFooterPanels === 'function') {
-    return atom.workspace.getFooterPanels()[0].getItem()
+    const footerPanels = atom.workspace.getFooterPanels()
+    if (footerPanels.length > 0) {
+      return footerPanels[0].getItem()
+    }
   }
 
   return atom.workspace.getBottomPanels()[0].getItem()
