@@ -7,20 +7,22 @@ This is an [Atom](https://atom.io) package that displays the current line ending
 
 ## To Use
 
-When the package is activated it will show the current line ending of the file in the right side of the status-bar. If a new file is created the line ending will start with the system default: `CRLF` for Windows and `LF` for Mac and Linux. If a file contains both it will display `Mixed`.
+When the package is activated it will show the current line ending of the file in the right side of the status-bar. If a new file is created the line ending will start with the system default: `CRLF` for Windows, `LF` for Mac and Linux, and `CR` for old-style Mac files. If a file contains multiple line-ending types it will display `Mixed`.
 
 ### Changing a File's Line Ending
 
-You can click the line ending in the status-bar to open a modal with the line ending options. Selecting a different line ending will change each line of the
+You can click the line ending in the status-bar to open a modal with the line ending options. Selecting a different line ending will change each line of the file in the active editor.
 
 ![modal](https://cloud.githubusercontent.com/assets/1305617/9273907/2be5c136-4291-11e5-94af-65ece408eb12.png)
 
 **Line Endings**
 
-- `CRLF` is "\r\n"
 - `LF` is "\n"
+- `CRLF` is "\r\n"
 
-#### Atom Commands
+**Note:** Because the `CR` line ending style is not use in any modern operating system, this package only supports converting *from* `CR` line endings not to it.
+
+### Atom Commands
 
 You can also change a file's line endings by using or <kbd>cmd + shift + P</kbd> searching for these commands:
 
