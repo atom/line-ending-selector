@@ -20,7 +20,7 @@ You can click the line ending in the status-bar to open a modal with the line en
 - `LF` is "\n"
 - `CRLF` is "\r\n"
 
-**Note:** Because the `CR` line ending style is not use in any modern operating system, this package only supports converting *from* `CR` line endings not to it.
+**Note:** Because the `CR` line ending style is not used in any modern operating system, this package only supports converting *from* `CR` line endings not to it.
 
 ### Atom Commands
 
