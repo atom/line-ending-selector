@@ -45,20 +45,23 @@ describe('line ending selector', () => {
         return atom.workspace.open('mixed-endings.md').then((e) => {
           editor = e
           editorElement = atom.views.getView(editor)
+          jasmine.attachToDOM(editorElement)
         })
       })
     })
 
     describe('When "line-ending-selector:convert-to-LF" is run', () => {
       it('converts the file to LF line endings', () => {
-        atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-LF')
+        editorElement.focus()
+        atom.commands.dispatch(document.activeElement, 'line-ending-selector:convert-to-LF')
         expect(editor.getText()).toBe('Hello\nGoodbye\nMixed\n')
       })
     })
 
     describe('When "line-ending-selector:convert-to-LF" is run', () => {
       it('converts the file to CRLF line endings', () => {
-        atom.commands.dispatch(editorElement, 'line-ending-selector:convert-to-CRLF')
+        editorElement.focus()
+        atom.commands.dispatch(document.activeElement, 'line-ending-selector:convert-to-CRLF')
         expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nMixed\r\n')
       })
     })
