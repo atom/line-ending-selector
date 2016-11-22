@@ -9,7 +9,7 @@
     "atom": "^1.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.0",
+    "atom-select-list": "0.0.2",
     "underscore-plus": "^1.6.6"
   },
   "consumedServices": {
