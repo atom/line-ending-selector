@@ -183,16 +183,16 @@ describe('line ending selector', () => {
 
       it('opens the line ending selector modal', () => {
         expect(lineEndingModal.isVisible()).toBe(true)
-        expect(lineEndingSelector).toHaveFocus()
-        let listItems = lineEndingSelector.list.find('li')
+        expect(lineEndingSelector.element.contains(document.activeElement)).toBe(true)
+        let listItems = lineEndingSelector.element.querySelectorAll('li')
         expect(listItems[0].textContent).toBe('LF')
         expect(listItems[1].textContent).toBe('CRLF')
 
-        lineEndingSelector.filterEditorView.getModel().setText('CR')
+        lineEndingSelector.refs.queryEditor.setText('CR')
 
         advanceClock(100)
 
-        atom.commands.dispatch(lineEndingSelector[0], 'core:confirm')
+        lineEndingSelector.confirmSelection()
         expect(lineEndingModal.isVisible()).toBe(false)
 
         advanceClock(1)
@@ -205,7 +205,7 @@ describe('line ending selector', () => {
 
       describe('when modal is exited', () => {
         it('leaves the tile selection as-is', () => {
-          atom.commands.dispatch(lineEndingSelector[0], 'core:cancel')
+          lineEndingSelector.cancelSelection()
           expect(lineEndingTile.textContent).toBe('LF')
         })
       })
