@@ -1,6 +1,6 @@
 {
   "name": "line-ending-selector",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "main": "./lib/main",
   "description": "Select the line ending to use for the current editor.",
   "license": "MIT",
