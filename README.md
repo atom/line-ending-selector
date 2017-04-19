@@ -1,6 +1,5 @@
 # Line Ending Selector package
-[![OS X Build Status](https://travis-ci.org/atom/line-ending-selector.svg?branch=master)](https://travis-ci.org/atom/line-ending-selector) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/b3743n9ojomlpn1g/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/line-ending-selector/branch/master) [![Dependency Status](https://david-dm.org/atom/line-ending-selector
-.svg)](https://david-dm.org/atom/line-ending-selector)
+[![OS X Build Status](https://travis-ci.org/atom/line-ending-selector.svg?branch=master)](https://travis-ci.org/atom/line-ending-selector) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/b3743n9ojomlpn1g/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/line-ending-selector/branch/master) [![Dependency Status](https://david-dm.org/atom/line-ending-selector.svg)](https://david-dm.org/atom/line-ending-selector)
 
 ![status bar tile](https://cloud.githubusercontent.com/assets/1305617/9274149/6b317568-4293-11e5-83ba-614a6c0d9890.png)
 
