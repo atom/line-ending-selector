@@ -197,7 +197,19 @@ describe('line ending selector', () => {
 
       describe('when the text editor does not have focus', () => {
         it('opens the line ending selector modal for the active text editor', () => {
-          // TODO
+          atom.workspace.getLeftDock().activate()
+          const item = atom.workspace.getActivePaneItem()
+          expect(item instanceof TextEditor).toBe(false)
+
+          lineEndingTile.element.dispatchEvent(new MouseEvent('click', {}))
+          lineEndingModal = atom.workspace.getModalPanels()[0]
+          lineEndingSelector = lineEndingModal.getItem()
+
+          expect(lineEndingModal.isVisible()).toBe(true)
+          expect(lineEndingSelector.element.contains(document.activeElement)).toBe(true)
+          let listItems = lineEndingSelector.element.querySelectorAll('li')
+          expect(listItems[0].textContent).toBe('LF')
+          expect(listItems[1].textContent).toBe('CRLF')
         })
       })
 
