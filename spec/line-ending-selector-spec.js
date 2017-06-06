@@ -212,7 +212,7 @@ describe('line ending selector', () => {
       })
     })
 
-    describe('clicking out of a text editor', () => {
+    describe('closing the last text editor', () => {
       it('displays no line ending in the status bar', () => {
         waitsForPromise(() => {
           return atom.workspace.open('unix-endings.md').then(() => {
