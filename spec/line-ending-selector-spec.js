@@ -65,6 +65,8 @@ describe('line ending selector', () => {
               subscription.dispose()
               expect(lineEndingTile.element.textContent).toBe('CRLF')
               expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
+              expect(getTooltipText(lineEndingTile.element)).toBe('File uses CRLF (Windows) line endings')
+
               done()
             })
           })
@@ -78,6 +80,8 @@ describe('line ending selector', () => {
               subscription.dispose()
               expect(lineEndingTile.element.textContent).toBe('LF')
               expect(editor.getBuffer().getPreferredLineEnding()).toBe('\n')
+              expect(getTooltipText(lineEndingTile.element)).toBe('File uses LF (Unix) line endings')
+
               done()
             })
           })
@@ -250,6 +254,7 @@ describe('line ending selector', () => {
         })
 
         expect(lineEndingTile.element.textContent).toBe('LF')
+        expect(getTooltipText(lineEndingTile.element)).toBe('File uses LF (Unix) line endings')
 
         waitsFor((done) => {
           editor.setTextInBufferRange([[0, 0], [0, 0]], '... ')
@@ -260,6 +265,7 @@ describe('line ending selector', () => {
         runs(() => {
           expect(tileUpdateCount).toBe(1)
           expect(lineEndingTile.element.textContent).toBe('Mixed')
+          expect(getTooltipText(lineEndingTile.element)).toBe('File uses mixed line endings')
         })
 
         waitsFor((done) => {
@@ -270,6 +276,7 @@ describe('line ending selector', () => {
         runs(() => {
           expect(tileUpdateCount).toBe(2)
           expect(lineEndingTile.element.textContent).toBe('CRLF')
+          expect(getTooltipText(lineEndingTile.element)).toBe('File uses CRLF (Windows) line endings')
         })
 
         waitsFor((done) => {
@@ -295,3 +302,8 @@ describe('line ending selector', () => {
     })
   })
 })
+
+function getTooltipText (element) {
+  const [tooltip] = atom.tooltips.findTooltips(element)
+  return tooltip.getTitle()
+}
