@@ -1,4 +1,5 @@
 const helpers = require('../lib/helpers')
+const {TextEditor} = require('atom')
 
 describe('line ending selector', () => {
   let lineEndingTile
@@ -178,45 +179,79 @@ describe('line ending selector', () => {
             lineEndingTile.onDidChange(done)
           )
         )
+      })
 
-        runs(() => {
+      describe('when the text editor has focus', () => {
+        it('opens the line ending selector modal for the text editor', () => {
+          atom.workspace.getCenter().activate()
+          const item = atom.workspace.getActivePaneItem()
+          expect(item.getFileName && item.getFileName()).toBe('unix-endings.md')
+
           lineEndingTile.element.dispatchEvent(new MouseEvent('click', {}))
           lineEndingModal = atom.workspace.getModalPanels()[0]
           lineEndingSelector = lineEndingModal.getItem()
+
+          expect(lineEndingModal.isVisible()).toBe(true)
+          expect(lineEndingSelector.element.contains(document.activeElement)).toBe(true)
+          let listItems = lineEndingSelector.element.querySelectorAll('li')
+          expect(listItems[0].textContent).toBe('LF')
+          expect(listItems[1].textContent).toBe('CRLF')
         })
       })
 
-      it('opens the line ending selector modal', () => {
-        expect(lineEndingModal.isVisible()).toBe(true)
-        expect(lineEndingSelector.element.contains(document.activeElement)).toBe(true)
-        let listItems = lineEndingSelector.element.querySelectorAll('li')
-        expect(listItems[0].textContent).toBe('LF')
-        expect(listItems[1].textContent).toBe('CRLF')
+      describe('when the text editor does not have focus', () => {
+        it('opens the line ending selector modal for the active text editor', () => {
+          atom.workspace.getLeftDock().activate()
+          const item = atom.workspace.getActivePaneItem()
+          expect(item instanceof TextEditor).toBe(false)
 
-        lineEndingSelector.refs.queryEditor.setText('CR')
-        lineEndingSelector.confirmSelection()
-        expect(lineEndingModal.isVisible()).toBe(false)
+          lineEndingTile.element.dispatchEvent(new MouseEvent('click', {}))
+          lineEndingModal = atom.workspace.getModalPanels()[0]
+          lineEndingSelector = lineEndingModal.getItem()
 
-        waitsFor((done) => {
-          lineEndingTile.onDidChange(() => {
-            expect(lineEndingTile.element.textContent).toBe('CRLF')
-            const editor = atom.workspace.getActiveTextEditor()
-            expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n')
-            expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
-            done()
+          expect(lineEndingModal.isVisible()).toBe(true)
+          expect(lineEndingSelector.element.contains(document.activeElement)).toBe(true)
+          let listItems = lineEndingSelector.element.querySelectorAll('li')
+          expect(listItems[0].textContent).toBe('LF')
+          expect(listItems[1].textContent).toBe('CRLF')
+        })
+      })
+
+      describe('when selecting a different line ending for the file', () => {
+        it('changes the line endings in the buffer', () => {
+          lineEndingTile.element.dispatchEvent(new MouseEvent('click', {}))
+          lineEndingModal = atom.workspace.getModalPanels()[0]
+          lineEndingSelector = lineEndingModal.getItem()
+
+          lineEndingSelector.refs.queryEditor.setText('CR')
+          lineEndingSelector.confirmSelection()
+          expect(lineEndingModal.isVisible()).toBe(false)
+
+          waitsFor((done) => {
+            lineEndingTile.onDidChange(() => {
+              expect(lineEndingTile.element.textContent).toBe('CRLF')
+              const editor = atom.workspace.getActiveTextEditor()
+              expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n')
+              expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
+              done()
+            })
           })
         })
       })
 
       describe('when modal is exited', () => {
         it('leaves the tile selection as-is', () => {
+          lineEndingTile.element.dispatchEvent(new MouseEvent('click', {}))
+          lineEndingModal = atom.workspace.getModalPanels()[0]
+          lineEndingSelector = lineEndingModal.getItem()
+
           lineEndingSelector.cancelSelection()
           expect(lineEndingTile.element.textContent).toBe('LF')
         })
       })
     })
 
-    describe('clicking out of a text editor', () => {
+    describe('closing the last text editor', () => {
       it('displays no line ending in the status bar', () => {
         waitsForPromise(() => {
           return atom.workspace.open('unix-endings.md').then(() => {
