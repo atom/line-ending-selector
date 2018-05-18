@@ -223,19 +223,21 @@ describe('line ending selector', () => {
           lineEndingModal = atom.workspace.getModalPanels()[0]
           lineEndingSelector = lineEndingModal.getItem()
 
-          lineEndingSelector.refs.queryEditor.setText('CR')
-          lineEndingSelector.confirmSelection()
-          expect(lineEndingModal.isVisible()).toBe(false)
-
-          waitsFor((done) => {
+          const lineEndingChangedPromise = new Promise(resolve => {
             lineEndingTile.onDidChange(() => {
               expect(lineEndingTile.element.textContent).toBe('CRLF')
               const editor = atom.workspace.getActiveTextEditor()
               expect(editor.getText()).toBe('Hello\r\nGoodbye\r\nUnix\r\n')
               expect(editor.getBuffer().getPreferredLineEnding()).toBe('\r\n')
-              done()
+              resolve()
             })
           })
+
+          lineEndingSelector.refs.queryEditor.setText('CR')
+          lineEndingSelector.confirmSelection()
+          expect(lineEndingModal.isVisible()).toBe(false)
+
+          waitsForPromise(() => lineEndingChangedPromise)
         })
       })
 
