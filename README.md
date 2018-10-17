@@ -1,3 +1,7 @@
+### This package is now a part of the [core Atom repository](https://github.com/atom/atom/tree/master/packages/line-ending-selector). Please direct all issues and pull requests there in the future!
+
+---
+
 # Line Ending Selector package
 [![OS X Build Status](https://travis-ci.org/atom/line-ending-selector.svg?branch=master)](https://travis-ci.org/atom/line-ending-selector) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/b3743n9ojomlpn1g/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/line-ending-selector/branch/master) [![Dependency Status](https://david-dm.org/atom/line-ending-selector.svg)](https://david-dm.org/atom/line-ending-selector)
 
